@@ -1,0 +1,21 @@
+{
+  "name": "whatsgrab",
+  "version": "0.0.0-alpha.1",
+  "description": "Grab whatsapp messages from web.whatsapp.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whatsapp"
+  ],
+  "dependencies": {
+    "cli-interact": "^0.1.9",
+    "q": "^1.4.1",
+    "spooky": "^0.2.5",
+    "tiny-jsonrpc": "^2.0.1"
+  },
+  "author": "VariousMilkshakes <vm@hadesoft.io> (http://www.hadesoft.io)",
+  "license": "MIT",
+  "homepage": "www.hadesoft.io"
+}
