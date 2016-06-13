@@ -1,8 +1,8 @@
 {
   "name": "whatsgrab",
-  "version": "0.0.0-alpha.1",
+  "version": "1.0.0-alpha.1",
   "description": "Grab whatsapp messages from web.whatsapp.com",
-  "main": "index.js",
+  "main": "example.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
