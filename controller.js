@@ -3,7 +3,7 @@ var Q		= require('q');
 
 var spooky;
 var c = {
-	channel: "Gladstones",
+	channel: "",
 	defer: null,
 	qr: null,
 	messages: {},
@@ -12,8 +12,9 @@ var c = {
 	yourUsername: "Ben"
 };
 
-c.setup = function (url){
+c.setup = function (url, channel){
 	var defer = Q.defer();
+	c.channel = channel;
 	
 	console.log("Starting SpookyJS...");
 	
@@ -83,7 +84,7 @@ c.setup = function (url){
 				
 				this.emit('checkpoint', {
 					name: "qr",
-					value: qrDetails[0].text
+					value: qrDetails[0].url
 				});
 			});
 			
