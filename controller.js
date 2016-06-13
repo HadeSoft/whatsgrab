@@ -239,4 +239,9 @@ c.kill = function (res){
 	c.defer.resolve(res);
 }
 
+c.test = function (){
+	var test = require('./package.json');
+	console.log("You are using: " + test.version);
+}
+
 module.exports = c;
