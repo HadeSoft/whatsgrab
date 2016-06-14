@@ -1,6 +1,6 @@
 {
   "name": "whatsgrab",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.7",
   "description": "Grab whatsapp messages from web.whatsapp.com",
   "main": "controller.js",
   "scripts": {

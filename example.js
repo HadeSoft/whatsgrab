@@ -3,7 +3,7 @@ var controller = require('./controller');
 console.log("running");
 
 // Setup spookyjs with target url
-controller.setup('http://web.whatsapp.com', 'Gladstones')
+controller.setup('https://web.whatsapp.com', 'Gladstones')
 .then(function (){
 	
 	// Start by getting qr code from web.whatsapp

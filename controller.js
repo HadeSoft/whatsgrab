@@ -78,7 +78,7 @@ c.setup = function (url, channel){
 			// 		return this.evaluate(function (){
 			// 			return window.loaded;
 			// 		});
-			this.wait(15000, function (){
+			this.wait(20000, function (){
 					var qrDetails = this.evaluate(function (){
 					var els = document.querySelector('img');
 					
@@ -86,7 +86,7 @@ c.setup = function (url, channel){
 					
 				});
 				
-				if (qrDetails == null) {
+				if (qrDetails === null || qrDetails === 'undefined') {
 					this.emit('error', "Could not find QR code");
 				}
 				
@@ -219,7 +219,6 @@ c.start = function (){
 	c.defer = Q.defer();
 	
 	spooky.on('checkpoint', function (varible){
-		console.dir(varible);
 		c[varible.name] = varible.value;
 		
 		console.log("Checkpoint Reached, var [" + varible.name + "] updated");
