@@ -1,18 +1,17 @@
 var controller = require('./controller');
-var config = require('./settings.json');
 
 console.log("running");
 
 // Setup spookyjs with target url
-controller.setup(config.whatsappUrl)
+controller.setup('http://web.whatsapp.com', 'Gladstones')
 .then(function (){
 	
 	// Start by getting qr code from web.whatsapp
 	controller.start()
-	.then(function (){
+	.then(function (code){
 		
 		// Get qr code data value
-		console.log(controller.qr);
+		console.log("QR CODE:" + code);
 		
 		// Continue listening to spookyjs
 		// Spookyjs will then wait for a

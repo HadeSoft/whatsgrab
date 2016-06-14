@@ -8,7 +8,7 @@ var c = {
 	qr: null,
 	messages: {},
 	timeout: 22000,
-	loadtime: 15000,
+	loadtime: 20000,
 	yourUsername: "Ben"
 };
 
@@ -24,12 +24,12 @@ c.setup = function (url, channel){
 			verbose: true,
 			pageSettings: {
 				userAgent: "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36"
-			}
+			},
+			waitTimeout: 60000
 		},
 		child: {
 			'ignore-ssl-errors': true,
-			'ssl-protocol': 'tlsv1',
-			// engine: 'slimerjs'
+			'ssl-protocol': 'tlsv1'
 		}
 	}, function (err){
 
@@ -50,6 +50,7 @@ c.setup = function (url, channel){
 		spooky.then([{config: c}, function (){
 			// Casper Context
 			window.c = config;
+			this.page.injectJs('./utils/javascript/jquery.min.js');
 			
 			console.log("Pinging CasperJS");
 			this.emit('report', "Running CasperJS");
@@ -57,34 +58,41 @@ c.setup = function (url, channel){
 			this.emit('report', this.evaluate(function (){
 				return document.title;
 			}));
+			
+			this.evaluate(function (){
+				window.loaded = false;
+				
+				function checkLoad() {
+					window.loaded = true;
+				}
+				
+				window.onload = checkLoad;
+			})
 
 		}]);
 
-		spooky.then(function (){
+		spooky.then(function start (){
 			
 			// Get QR Code data value
-			this.wait(window.c.loadtime, function (){
-				var qrDetails = this.evaluate(function (){
-					var els = document.querySelectorAll('img');
+			// this.waitFor(function (){
+			// 		return this.evaluate(function (){
+			// 			return window.loaded;
+			// 		});
+			this.wait(15000, function (){
+					var qrDetails = this.evaluate(function (){
+					var els = document.querySelector('img');
 					
-					var results = [];
+					return els.getAttribute('src');
 					
-					Array.prototype.forEach.call(els, function (el){
-						if (el.hasAttribute('src')) {
-							var title = el.hasAttribute('alt') ? el.getAttribute('alt') : null;
-							results.push({
-								url: el.getAttribute('src'),
-								text: title
-							});
-						}
-					});
-					
-					return results;
 				});
+				
+				if (qrDetails == null) {
+					this.emit('error', "Could not find QR code");
+				}
 				
 				this.emit('checkpoint', {
 					name: "qr",
-					value: qrDetails[0].url
+					value: qrDetails
 				});
 			});
 			
@@ -183,13 +191,17 @@ c.setup = function (url, channel){
 	});
 	
 	spooky.on('error', function (e, stack){
-		console.error(e);
 		
 		if (stack) {
 			console.log(stack);
 		}
 		
 		c.defer.reject(e);
+	});
+	
+	spooky.on("resource.error", function(resourceError){
+		console.log('Unable to load resource (#' + resourceError.id + 'URL:' + resourceError.url + ')');
+		console.log('Error code: ' + resourceError.errorCode + '. Description: ' + resourceError.errorString);
 	});
 
 	spooky.on('report', function (greeting){
@@ -207,12 +219,13 @@ c.start = function (){
 	c.defer = Q.defer();
 	
 	spooky.on('checkpoint', function (varible){
+		console.dir(varible);
 		c[varible.name] = varible.value;
 		
 		console.log("Checkpoint Reached, var [" + varible.name + "] updated");
 		console.log("Call continue() or kill()!");
 		
-		c.defer.resolve();
+		c.defer.resolve(varible.value);
 	})
 	
 	spooky.on('complete', function (res){
